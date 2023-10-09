@@ -16,6 +16,11 @@ class UserSeeder extends Seeder
         User::factory()->create([
             'name' => 'Lasha Gagnidze',
             'email' => 'lashadeveloper@gmail.com',
+            'type' => 'admin'
+        ]);
+        User::factory()->create([
+            'name' => 'Lasha Gagnidze1',
+            'email' => 'lashadeveloper1@gmail.com',
         ]);
     }
 }

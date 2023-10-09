@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GenreController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,7 +23,12 @@ Route::middleware('locale')->group(function () {
         Route::post('logout', [AuthController::class, 'logout'])
             ->name('auth.logout');
 
-        Route::apiResource('genre', GenreController::class)
+        Route::apiResource('genres', GenreController::class)
+            ->only('index', 'show')
+            ->names('admin.genre');
+
+        Route::apiResource('genres', GenreController::class)
+            ->only('store', 'update', 'destroy')
             ->middleware('role:admin')
             ->names('admin.genre');
     });
