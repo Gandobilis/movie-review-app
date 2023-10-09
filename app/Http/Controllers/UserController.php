@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\User\UserCreateRequest;
+use App\Http\Requests\User\UserUpdateRequest;
 use App\Models\User;
 use App\Services\FileUploadService;
 use Illuminate\Http\Response;
@@ -19,21 +21,23 @@ class UserController extends Controller
     {
         $users = User::paginate(config('paginate.default'));
 
-        return response(['users' => $users]);
+        return response([
+            'users' => $users
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserRequest $request): Response
+    public function store(UserCreateRequest $request): Response
     {
         $data = $request->validated();
-        $image = $this->fileUploadService->uploadFile($data['image'], 'users');
-        unset($data['image']);
+
+        if (isset($data['image'])) {
+            $data['image'] = $this->fileUploadService->uploadFile($data['image'], 'users');
+        }
 
         $user = User::create($data);
-        $user->image()->create(['image' => $image]);
-        $user->load('image');
 
         return response([
             'message' => __('user.success.store'),
@@ -46,27 +50,27 @@ class UserController extends Controller
      */
     public function show(User $user): Response
     {
-        $user->load('image');
-
-        return response(['user' => $user]);
+        return response([
+            'user' => $user
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequest $request, User $user): Response
+    public function update(UserUpdateRequest $request, User $user): Response
     {
         $data = $request->validated();
-        if (isset($data['image'])) {
-            $this->fileUploadService->deleteFile($user->image?->image);
 
-            $image = $this->fileUploadService->uploadFile($data['image'], 'users');
-            $user->image()->update(['image' => $image]);
+        if (isset($data['image'])) {
+            if (isset($user->image)) {
+                $this->fileUploadService->deleteFile($user->image);
+            }
+
+            $data['image'] = $this->fileUploadService->uploadFile($data['image'], 'users');
         }
 
-        unset($data['image']);
         $user->update($data);
-        $user->load('image');
 
         return response([
             'message' => __('user.success.update'),
@@ -79,8 +83,10 @@ class UserController extends Controller
      */
     public function destroy(User $user): Response
     {
-        $this->fileUploadService->deleteFile($user->image?->image);
-        $user->image?->delete();
+        if (isset($user->image)) {
+            $this->fileUploadService->deleteFile($user->image);
+        }
+
         $user->delete();
 
         return response([
@@ -94,7 +100,6 @@ class UserController extends Controller
     public function activate(User $user): Response
     {
         $user->update(['active' => true]);
-        $user->load('image');
 
         return response([
             'message' => __('user.success.activate'),
@@ -108,7 +113,6 @@ class UserController extends Controller
     public function deactivate(User $user): Response
     {
         $user->update(['active' => false]);
-        $user->load('image');
 
         return response([
             'message' => __('user.success.deactivate'),
