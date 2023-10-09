@@ -4,42 +4,42 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Response;
-use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class AuthController extends Controller
 {
-    private function res($message, $data = [], $statusCode = ResponseAlias::HTTP_OK): Response
-    {
-        return response([
-            'message' => $message,
-            'data' => $data,
-        ], $statusCode);
-    }
-
     public function login(LoginRequest $request): Response
     {
         $credentials = $request->validated();
 
         if (!auth()->attempt($credentials)) {
-            return $this->res(__('auth.unauthorized'), [], ResponseAlias::HTTP_UNAUTHORIZED);
+            return response([
+                'message' => __('auth.unauthorized')
+            ], 401);
         }
 
-        $user = auth()->user();
-
-        if (!$user->active) {
+        if (!auth()->user()->active) {
             auth()->logout();
-            return $this->res(__('auth.forbidden'), [], ResponseAlias::HTTP_FORBIDDEN);
+
+            return response([
+                'message' => __('auth.forbidden')
+            ], 403);
         }
 
-        $token = $user->createToken('MovieReviewAppApiToken')->plainTextToken;
+        $access_token = auth()->user()->createToken('MovieReviewAppApiToken')->plainTextToken;
 
-        return $this->res(__('auth.log_in'), ['user' => $user, 'access_token' => $token]);
+
+        return response([
+            'user' => auth()->user(),
+            'access_token' => $access_token
+        ]);
     }
 
     public function logout(): Response
     {
         auth()->user()->tokens()->delete();
 
-        return $this->res(__('auth.log_out'));
+        return response([
+            'message' => __('auth.log_out')
+        ]);
     }
 }
