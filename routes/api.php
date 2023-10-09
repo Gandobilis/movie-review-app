@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,13 +24,21 @@ Route::middleware('locale')->group(function () {
         Route::post('logout', [AuthController::class, 'logout'])
             ->name('auth.logout');
 
-        Route::apiResource('genres', GenreController::class)
-            ->only('index', 'show')
-            ->names('admin.genre');
+        Route::middleware('role:admin')->prefix('admin')->group(function () {
+            Route::apiResource('users', UserController::class)
+                ->names('admin.users');
+            Route::put('users/{user}/activate', [UserController::class, 'activate'])
+                ->name('admin.users.activate');
+            Route::put('users/{user}/deactivate', [UserController::class, 'deactivate'])
+                ->name('admin.users.deactivate');
+
+            Route::apiResource('genres', GenreController::class)
+                ->only('store', 'update', 'destroy')
+                ->names('admin.genres');
+        });
 
         Route::apiResource('genres', GenreController::class)
-            ->only('store', 'update', 'destroy')
-            ->middleware('role:admin')
-            ->names('admin.genre');
+            ->only('index', 'show')
+            ->names('genres');
     });
 });
