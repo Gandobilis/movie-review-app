@@ -29,6 +29,7 @@ class AuthController extends Controller
 
 
         return response([
+            'message' => __('auth.log_in'),
             'user' => auth()->user(),
             'access_token' => $access_token
         ]);
