@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Movie;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MovieRequest extends FormRequest
+class MovieUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,8 @@ class MovieRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "image" => "required|file|mimes:png,jpg,jpeg",
-            "name" => 'required|string|max:255',
+            "image" => "file|mimes:png,jpg,jpeg",
+            "name" => 'string|max:255',
             'desc' => 'string',
             'genre_ids' => 'array',
             'genre_ids.*' => 'integer|exists:genres,id'
