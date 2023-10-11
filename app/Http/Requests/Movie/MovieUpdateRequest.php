@@ -23,7 +23,7 @@ class MovieUpdateRequest extends FormRequest
     {
         return [
             "image" => "file|mimes:png,jpg,jpeg",
-            "name" => 'required|string|max:255',
+            "title" => 'required|string|max:255',
             'desc' => 'string',
             'genre_ids' => 'required|array',
             'genre_ids.*' => 'integer|exists:genres,id'

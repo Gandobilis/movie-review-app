@@ -28,8 +28,13 @@ class Movie extends Model
         );
     }
 
-    public function genres(): belongsToMany
+    public function genres(): BelongsToMany
     {
         return $this->belongsToMany(Genre::class, 'movie_genre');
+    }
+
+    public function collections(): BelongsToMany
+    {
+        return $this->belongsToMany(Collection::class, 'movie_collection');
     }
 }
