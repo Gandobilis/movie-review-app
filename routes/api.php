@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,9 @@ Route::middleware('locale')->group(function () {
             Route::apiResource('genres', GenreController::class)
                 ->only('store', 'update', 'destroy')
                 ->names('admin.genres');
+
+            Route::apiResource('movies', MovieController::class)
+                ->names('admin.movies');
         });
 
         Route::apiResource('genres', GenreController::class)

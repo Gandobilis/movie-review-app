@@ -19,7 +19,7 @@ class MovieController extends Controller
      */
     public function index(): Response
     {
-        $movies = Movie::paginate(config('paginate.default'));
+        $movies = Movie::with('genres:id,name')->paginate(config('paginate.default'));
 
         return response([
             'movies' => $movies
@@ -64,8 +64,8 @@ class MovieController extends Controller
         $data = $request->validated();
 
         if (isset($data['image'])) {
-            $this->fileUploadService->deleteFile($movie->image);
             $data['image'] = $this->fileUploadService->uploadFile($data['image'], 'users');
+            $this->fileUploadService->deleteFile($movie->image);
         }
 
         $movie->update($data);
