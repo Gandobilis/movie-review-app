@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
@@ -43,6 +44,9 @@ Route::middleware('locale')->group(function () {
 
             Route::apiResource('movies', MovieController::class)
                 ->names('admin.movies');
+
+            Route::apiResource('collections', CollectionController::class)
+                ->names('admin.collections');
         });
 
         Route::apiResource('genres', GenreController::class)

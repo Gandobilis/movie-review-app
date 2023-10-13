@@ -27,4 +27,9 @@ class Collection extends Model
     {
         return $this->belongsToMany(Movie::class, 'movie_collection');
     }
+
+    public function rates(): HasMany
+    {
+        return $this->hasMany(Rate::class);
+    }
 }
