@@ -8,33 +8,17 @@ use Illuminate\Http\Request;
 class RateController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(RateRequest $request)
     {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Rate $rate)
-    {
-        //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Rate $rate)
+    public function update(RateRequest $request, Rate $rate)
     {
         //
     }
@@ -44,6 +28,8 @@ class RateController extends Controller
      */
     public function destroy(Rate $rate)
     {
-        //
+        $rate->delete();
+
+        return response(status: 204);
     }
 }
