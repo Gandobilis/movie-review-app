@@ -26,7 +26,7 @@ class ProfileController extends Controller
     public function update(ProfileRequest $request): Response
     {
         $data = $request->validated();
-        $genre_ids = $data['genre_ids'] ?? [];
+        $genre_ids = $data['genre_ids'];
         unset($data['genre_ids']);
 
         $user = auth()->user();

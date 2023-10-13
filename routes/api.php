@@ -36,8 +36,8 @@ Route::middleware('locale')->group(function () {
         Route::post('logout', [AuthController::class, 'logout'])
             ->name('auth.logout');
 
-        Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
-        Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::get('profile', [ProfileController::class, 'show'])->name('auth.profile.show');
+        Route::put('profile', [ProfileController::class, 'update'])->name('auth.profile.update');
 
         Route::middleware('role:admin')->prefix('admin')->group(function () {
             Route::apiResource('users', UserController::class)
