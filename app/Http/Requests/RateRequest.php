@@ -24,7 +24,6 @@ class RateRequest extends FormRequest
         return [
             'rate' => 'required|integer|min:0|max:5',
             'desc' => 'string',
-            'user_id' => 'exists:users,id'
         ];
     }
 }
