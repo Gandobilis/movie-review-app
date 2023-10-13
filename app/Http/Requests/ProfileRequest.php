@@ -22,9 +22,9 @@ class ProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'string|max:255',
-            'email' => 'email|unique:users,email,' . auth()->user()->id,
-            'genre_ids' => 'array',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . auth()->id(),
+            'genre_ids' => 'required|array',
             'genre_ids.*' => 'integer|exists:genres,id'
         ];
     }
