@@ -75,4 +75,13 @@ class CollectionController extends Controller
 
         return response(status: 204);
     }
+
+    public function liked(): Response
+    {
+        $collections = Collection::where('user_id', auth()->id);
+
+        return response([
+            'collections' => $collections
+        ]);
+    }
 }

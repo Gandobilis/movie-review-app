@@ -51,8 +51,16 @@ class MovieController extends Controller
     {
         $movie->load('genres');
 
+        $similar_movies = Movie::whereHas('genres', function ($query) use ($movie) {
+            $query->whereIn('genre_id', $movie->genres->pluck('id'));
+        })
+            ->where('id', '!=', $movie->id)
+            ->with('genres')
+            ->get();
+
         return response([
-            'movie' => $movie
+            'movie' => $movie,
+            'similar_movies' => $similar_movies
         ]);
     }
 

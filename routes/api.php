@@ -24,6 +24,14 @@ Route::middleware('locale')->group(function () {
     Route::post('login', [AuthController::class, 'login'])
         ->name('auth.login');
 
+    Route::apiResource('collections', CollectionController::class)
+        ->only('index', 'show')
+        ->names('collections');
+
+    Route::apiResource('movies', MovieController::class)
+        ->only('index', 'show')
+        ->names('movies');
+
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', [AuthController::class, 'logout'])
             ->name('auth.logout');
@@ -48,13 +56,17 @@ Route::middleware('locale')->group(function () {
         });
 
         Route::apiResource('collections', CollectionController::class)
-            ->names('admin.collections');
+            ->names('auth.collections');
+
+        Route::get('collections/liked', [CollectionController::class, 'liked'])
+            ->name('auth.collections.liked');
 
         Route::apiResource('rate', RateController::class)
-            ->only('crate', 'update', 'destroy');
+            ->only('crate', 'update', 'destroy')
+            ->names('auth.rates');
 
         Route::apiResource('genres', GenreController::class)
             ->only('index', 'show')
-            ->names('genres');
+            ->names('auth.genres');
     });
 });
