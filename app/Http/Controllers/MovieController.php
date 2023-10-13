@@ -51,12 +51,12 @@ class MovieController extends Controller
     {
         $movie->load('genres');
 
-        $similar_movies = Movie::whereHas('genres', function ($query) use ($movie) {
-            $query->whereIn('genre_id', $movie->genres->pluck('id'));
-        })
-            ->where('id', '!=', $movie->id)
-            ->with('genres')
-            ->get();
+        $similar_movies = $movie->genres()
+            ->whereHas('movies', function ($query) use ($movie) {
+                $query->where('movies.id', '!=', $movie->id);
+            })
+            ->with('movies')
+            ->paginate(config('paginate.default'));
 
         return response([
             'movie' => $movie,
