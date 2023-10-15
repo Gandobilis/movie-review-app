@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RateRequest;
-use App\Models\Rate;
+use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -17,7 +17,7 @@ class RateController extends Controller
         $data = $request->validated();
         $data['user_id'] = auth()->id();
 
-        $rate = Rate::create($data);
+        $rate = Rating::create($data);
 
         return response([
             'message' => 'Rating added successfully',
@@ -28,7 +28,7 @@ class RateController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(RateRequest $request, Rate $rate): Response
+    public function update(RateRequest $request, Rating $rate): Response
     {
         $data = $request->validated();
 
@@ -43,7 +43,7 @@ class RateController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Rate $rate): Response
+    public function destroy(Rating $rate): Response
     {
         $rate->delete();
 

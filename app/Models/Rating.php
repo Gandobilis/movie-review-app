@@ -6,14 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Rate extends Model
+class Rating extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'rate',
+        'rating',
         'user_id',
-        'desc'
+        'movie_id',
+        'comment'
     ];
 
     public function author(): BelongsTo
@@ -21,8 +22,8 @@ class Rate extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function collection(): BelongsTo
+    public function movie(): BelongsTo
     {
-        return $this->belongsTo(Collection::class);
+        return $this->belongsTo(Movie::class);
     }
 }

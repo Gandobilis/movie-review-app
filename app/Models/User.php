@@ -23,13 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'image',
-        'active',
         'type'
-    ];
-
-    protected $appends = [
-        'full_image'
     ];
 
     /**
@@ -52,25 +46,23 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    protected function fullImage(): Attribute
-    {
-        return Attribute::make(
-            get: fn() => url('/') . '/storage/' . $this->image
-        );
-    }
-
     public function genres(): belongsToMany
     {
         return $this->belongsToMany(Genre::class, 'user_genre');
     }
 
-    public function collections(): HasMany
+    public function created_collections(): HasMany
     {
         return $this->hasMany(Collection::class);
     }
 
-    public function rates(): HasMany
+    public function liked_collections(): BelongsToMany
     {
-        return $this->hasMany(Rate::class);
+        return $this->belongsToMany(Collection::class, 'user_collection');
+    }
+
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(Rating::class);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,12 +9,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Collection extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
+        'user_id',
         'title',
-        'desc',
-        'user_id'
+        'description'
     ];
 
     public function author(): BelongsTo
@@ -28,8 +25,8 @@ class Collection extends Model
         return $this->belongsToMany(Movie::class, 'movie_collection');
     }
 
-    public function rates(): HasMany
+    public function likes(): BelongsToMany
     {
-        return $this->hasMany(Rate::class);
+        return $this->belongsToMany(User::class, 'user_collection');
     }
 }

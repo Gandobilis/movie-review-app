@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Movie extends Model
 {
@@ -14,7 +15,7 @@ class Movie extends Model
     protected $fillable = [
         'image',
         'title',
-        'desc'
+        'description'
     ];
 
     protected $appends = [
@@ -36,5 +37,10 @@ class Movie extends Model
     public function collections(): BelongsToMany
     {
         return $this->belongsToMany(Collection::class, 'movie_collection');
+    }
+
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(Rating::class);
     }
 }

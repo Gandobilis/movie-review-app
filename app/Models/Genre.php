@@ -12,7 +12,7 @@ class Genre extends Model
 
     protected $fillable = [
         'name',
-        'desc'
+        'description'
     ];
 
     public function users(): belongsToMany
