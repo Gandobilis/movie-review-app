@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Movie\MovieUpdateRequest;
 use App\Http\Requests\MovieRequest;
 use App\Models\Movie;
+use App\Models\Rating;
 use App\Services\FileUploadService;
+use Illuminate\Support\Collection;
 use Illuminate\Http\Response;
 
 class MovieController extends Controller
@@ -49,18 +50,17 @@ class MovieController extends Controller
      */
     public function show(Movie $movie): Response
     {
-        $movie->load('genres:id,title', 'ratings.author:id,name');
-        $movie['rating'] = $movie->ratings->avg('rating');
+        $user = auth()->user();
+        $movie->load('genres:id,title');
+        $ratings = Rating::where('movie_id', $movie->id)->where('rating', '!=', null)->get();
 
-        $similar_movies = $movie->genres()
-            ->whereHas('movies', function ($query) use ($movie) {
-                $query->where('movies.id', '!=', $movie->id);
-            })
-            ->with('movies')
-            ->paginate(config('paginate.default'));
+        $movie['avg_rating'] = $ratings->avg('rating');
+
+        $similar_movies = $this->getMovies($movie->genres->pluck('id'), $user->viewedMovies->pluck('id'));
 
         return response([
             'movie' => $movie,
+            'ratings' => $ratings,
             'similar_movies' => $similar_movies
         ]);
     }
@@ -98,13 +98,7 @@ class MovieController extends Controller
     public function suggestMovie(): Response
     {
         $user = auth()->user();
-
-        $movies = Movie::whereHas('genres', function ($query) use ($user) {
-            $query->whereIn('id', $user->genres->pluck('id'));
-        })->whereNotIn('id', $user->viewedMovies->pluck('id'))
-            ->inRandomOrder()
-            ->take(10)
-            ->get();
+        $movies = $this->getMovies($user->genres->pluck('id'), $user->viewedMovies->pluck('id'));
 
         return response([
             'movies' => $movies
@@ -121,8 +115,13 @@ class MovieController extends Controller
         ]);
     }
 
-    private function getMovies(array $ids)
+    private function getMovies(Collection $genre_ids, Collection $movie_ids)
     {
-
+        return Movie::whereHas('genres', function ($query) use ($genre_ids, $movie_ids) {
+            $query->whereIn('id', $genre_ids);
+        })->whereNotIn('id', $movie_ids)
+            ->inRandomOrder()
+            ->take(10)
+            ->get();
     }
 }

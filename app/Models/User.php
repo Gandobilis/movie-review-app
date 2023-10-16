@@ -67,6 +67,6 @@ class User extends Authenticatable
 
     public function viewedMovies(): BelongsToMany
     {
-        return $this->belongsToMany(Movie::class, 'user_movie');
+        return $this->belongsToMany(Movie::class, 'ratings');
     }
 }
