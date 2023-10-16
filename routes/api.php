@@ -5,7 +5,7 @@ use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RateController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -61,7 +61,7 @@ Route::middleware('locale')->group(function () {
         Route::get('collections/liked', [CollectionController::class, 'liked'])
             ->name('auth.collections.liked');
 
-        Route::apiResource('rate', RateController::class)
+        Route::apiResource('rate', RatingController::class)
             ->only('crate', 'update', 'destroy')
             ->names('auth.rates');
 

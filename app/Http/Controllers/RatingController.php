@@ -7,7 +7,7 @@ use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class RateController extends Controller
+class RatingController extends Controller
 {
     /**
      * Store a newly created resource in storage.
