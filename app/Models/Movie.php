@@ -43,4 +43,9 @@ class Movie extends Model
     {
         return $this->hasMany(Rating::class);
     }
+
+    public function viewers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_movie');
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Models\Movie;
 use App\Models\User;
 use Illuminate\Http\Response;
 
@@ -70,5 +71,10 @@ class UserController extends Controller
         return response([
             'message' => __('user.success.destroy'),
         ]);
+    }
+
+    public function toggle_movie_view(Movie $movie): Response
+    {
+
     }
 }

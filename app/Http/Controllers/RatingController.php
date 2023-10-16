@@ -17,35 +17,35 @@ class RatingController extends Controller
         $data = $request->validated();
         $data['user_id'] = auth()->id();
 
-        $rate = Rating::create($data);
+        $rating = Rating::create($data);
 
         return response([
             'message' => 'Rating added successfully',
-            'rate' => $rate
+            'rating' => $rating
         ], 201);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(RatingRequest $request, Rating $rate): Response
+    public function update(RatingRequest $request, Rating $rating): Response
     {
         $data = $request->validated();
 
-        $rate->update($data);
+        $rating->update($data);
 
         return response([
             'message' => 'Rating updated successfully',
-            'rate' => $rate
+            'rating' => $rating
         ], 201);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Rating $rate): Response
+    public function destroy(Rating $rating): Response
     {
-        $rate->delete();
+        $rating->delete();
 
         return response(status: 204);
     }
