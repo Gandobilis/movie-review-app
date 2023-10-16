@@ -94,19 +94,19 @@ class MovieController extends Controller
         return response(status: 204);
     }
 
-    public function chooseMovie(): Response
+    public function suggestMovie(): Response
     {
         $user = auth()->user();
-        $userGenres = $user->genres()->pluck('id')->toArray();
 
-        $movies = Movie::whereHas('genres', function ($query) use ($userGenres) {
-            $query->whereIn('genres.id', $userGenres);
-        })->whereDoesntHave('users', function ($query) use ($user) {
-            $query->where('users.id', $user->id);
-        })->get();
+        $movies = Movie::whereHas('genres', function ($query) use ($user) {
+            $query->whereIn('id', $user->genres->pluck('id'));
+        })->whereNotIn('id', $user->viewed_movies->pluck('id'))
+            ->inRandomOrder()
+            ->take(10)
+            ->get();
 
         return response([
-            'unseen_movies' => $movies
+            'movies' => $movies
         ]);
     }
 }

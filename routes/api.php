@@ -46,7 +46,7 @@ Route::middleware('locale')->group(function () {
         Route::put('collection/like/{collection_id}', [UserController::class, 'toggle_collection_like'])
             ->name('auth.user.collection.toggle.like');
 
-        Route::get('/choose-movie', [MovieController::class, 'chooseMovie'])->name('choose-movie');
+        Route::get('/suggest-movie', [MovieController::class, 'suggestMovie'])->name('suggest-movie');
 
         Route::apiResource('rating', RatingController::class)
             ->only('store', 'update', 'destroy')

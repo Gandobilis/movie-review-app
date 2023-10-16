@@ -6,6 +6,7 @@ use App\Http\Requests\UserRequest;
 use App\Models\Collection;
 use App\Models\Movie;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Response;
 
 class UserController extends Controller
@@ -83,13 +84,27 @@ class UserController extends Controller
         ]);
     }
 
-    public function toggle_collection_like(string $collection_id): void
+    public function toggle_collection_like(string $collection_id): Response
     {
+        try {
+            Collection::findOrFail($collection_id);
+        } catch (ModelNotFoundException $e) {
+            return response(status: 404);
+        }
+
         auth()->user()->liked_collections()->toggle($collection_id);
+        return response()->noContent();
     }
 
-    public function toggle_movie_view(string $movie_id): void
+    public function toggle_movie_view(string $movie_id): Response
     {
+        try {
+            Movie::findOrFail($movie_id);
+        } catch (ModelNotFoundException $e) {
+            return response(status: 404);
+        }
+
         auth()->user()->viewed_movies()->toggle($movie_id);
+        return response()->noContent();
     }
 }
