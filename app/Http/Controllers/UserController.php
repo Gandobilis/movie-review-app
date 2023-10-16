@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Models\Collection;
 use App\Models\Movie;
 use App\Models\User;
 use Illuminate\Http\Response;
@@ -73,8 +74,22 @@ class UserController extends Controller
         ]);
     }
 
-    public function toggle_movie_view(Movie $movie): Response
+    public function liked_collections(): Response
     {
+        $liked_collections = auth()->user()->liked_collections;
 
+        return response([
+            'liked_collections' => $liked_collections
+        ]);
+    }
+
+    public function toggle_collection_like(string $collection_id): void
+    {
+        auth()->user()->liked_collections()->toggle($collection_id);
+    }
+
+    public function toggle_movie_view(string $movie_id): void
+    {
+        auth()->user()->viewed_movies()->toggle($movie_id);
     }
 }

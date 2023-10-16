@@ -41,6 +41,11 @@ Route::middleware('locale')->group(function () {
         Route::put('profile', [ProfileController::class, 'update'])
             ->name('auth.profile.update');
 
+        Route::put('movie/view/{movie_id}', [UserController::class, 'toggle_movie_view'])
+            ->name('auth.user.movie.toggle.view');
+        Route::put('collection/like/{collection_id}', [UserController::class, 'toggle_collection_like'])
+            ->name('auth.user.collection.toggle.like');
+
         Route::apiResource('rating', RatingController::class)
             ->only('store', 'update', 'destroy')
             ->names('auth.rating');
@@ -48,7 +53,7 @@ Route::middleware('locale')->group(function () {
         Route::apiResource('collections', CollectionController::class)
             ->names('auth.collections');
 
-        Route::get('collections/liked', [CollectionController::class, 'liked'])
+        Route::get('liked_collections', [UserController::class, 'liked_collections'])
             ->name('auth.collections.liked');
 
         Route::apiResource('rate', RatingController::class)
