@@ -73,4 +73,22 @@ class CollectionController extends Controller
 
         return response(status: 204);
     }
+
+    public function likedCollections(): Response
+    {
+        $liked_collections = auth()->user()->likedCollections;
+
+        return response([
+            'liked_collections' => $liked_collections
+        ]);
+    }
+
+    public function toggleCollectionLike(Collection $collection): Response
+    {
+        auth()->user()->likedCollections()->toggle($collection->id);
+
+        return response([
+            'message' => 'like status toggled.'
+        ]);
+    }
 }

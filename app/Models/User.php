@@ -50,12 +50,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Genre::class, 'user_genre');
     }
 
-    public function created_collections(): HasMany
+    public function createdCollections(): HasMany
     {
         return $this->hasMany(Collection::class);
     }
 
-    public function liked_collections(): BelongsToMany
+    public function likedCollections(): BelongsToMany
     {
         return $this->belongsToMany(Collection::class, 'user_collection');
     }
@@ -65,7 +65,7 @@ class User extends Authenticatable
         return $this->hasMany(Rating::class);
     }
 
-    public function viewed_movies(): BelongsToMany
+    public function viewedMovies(): BelongsToMany
     {
         return $this->belongsToMany(Movie::class, 'user_movie');
     }

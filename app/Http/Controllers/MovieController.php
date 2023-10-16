@@ -52,11 +52,12 @@ class MovieController extends Controller
         $movie->load('genres:id,title', 'ratings.author:id,name');
         $movie['rating'] = $movie->ratings->avg('rating');
 
-        $similar_movies = [];
-
-        foreach ($movie->genres as $genre) {
-            $similar_movies[$genre->title] = $genre->movies()->select('id', 'title')->take(3)->get();
-        }
+        $similar_movies = $movie->genres()
+            ->whereHas('movies', function ($query) use ($movie) {
+                $query->where('movies.id', '!=', $movie->id);
+            })
+            ->with('movies')
+            ->paginate(config('paginate.default'));
 
         return response([
             'movie' => $movie,
@@ -100,7 +101,7 @@ class MovieController extends Controller
 
         $movies = Movie::whereHas('genres', function ($query) use ($user) {
             $query->whereIn('id', $user->genres->pluck('id'));
-        })->whereNotIn('id', $user->viewed_movies->pluck('id'))
+        })->whereNotIn('id', $user->viewedMovies->pluck('id'))
             ->inRandomOrder()
             ->take(10)
             ->get();
@@ -108,5 +109,20 @@ class MovieController extends Controller
         return response([
             'movies' => $movies
         ]);
+    }
+
+    public function toggleMovieView(Movie $movie): Response
+    {
+
+        auth()->user()->viewedMovies()->toggle($movie->id);
+
+        return response([
+            'message' => 'view status toggled.'
+        ]);
+    }
+
+    private function getMovies(array $ids)
+    {
+
     }
 }

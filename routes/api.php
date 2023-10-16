@@ -41,9 +41,9 @@ Route::middleware('locale')->group(function () {
         Route::put('profile', [ProfileController::class, 'update'])
             ->name('auth.profile.update');
 
-        Route::put('movie/view/{movie_id}', [UserController::class, 'toggle_movie_view'])
+        Route::put('movie/toggle-view/{movie}', [MovieController::class, 'toggleMovieView'])
             ->name('auth.user.movie.toggle.view');
-        Route::put('collection/like/{collection_id}', [UserController::class, 'toggle_collection_like'])
+        Route::put('collection/toggle-like/{collection}', [CollectionController::class, 'toggleCollectionLike'])
             ->name('auth.user.collection.toggle.like');
 
         Route::get('/suggest-movie', [MovieController::class, 'suggestMovie'])->name('suggest-movie');
@@ -55,7 +55,7 @@ Route::middleware('locale')->group(function () {
         Route::apiResource('collections', CollectionController::class)
             ->names('auth.collections');
 
-        Route::get('liked_collections', [UserController::class, 'liked_collections'])
+        Route::get('liked-collections', [CollectionController::class, 'likedCollections'])
             ->name('auth.collections.liked');
 
         Route::apiResource('rate', RatingController::class)
