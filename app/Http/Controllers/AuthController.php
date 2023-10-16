@@ -17,16 +17,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        if (!auth()->user()->active) {
-            auth()->logout();
-
-            return response([
-                'message' => __('auth.forbidden')
-            ], 403);
-        }
-
         $access_token = auth()->user()->createToken('MovieReviewAppApiToken')->plainTextToken;
-
 
         return response([
             'message' => __('auth.log_in'),

@@ -42,10 +42,6 @@ Route::middleware('locale')->group(function () {
         Route::middleware('role:admin')->prefix('admin')->group(function () {
             Route::apiResource('users', UserController::class)
                 ->names('admin.users');
-            Route::put('users/{user}/activate', [UserController::class, 'activate'])
-                ->name('admin.users.activate');
-            Route::put('users/{user}/deactivate', [UserController::class, 'deactivate'])
-                ->name('admin.users.deactivate');
 
             Route::apiResource('genres', GenreController::class)
                 ->only('store', 'update', 'destroy')

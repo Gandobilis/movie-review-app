@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CollectionRequest;
-use App\Http\Requests\Movie\MovieRequest;
 use App\Models\Collection;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class CollectionController extends Controller

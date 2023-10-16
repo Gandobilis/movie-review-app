@@ -17,11 +17,10 @@ class LocaleMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $locale = $request->header('Locale');
-        $locales = config('app.locales');
-        $fallbackLocale = config('app.fallback_locale');
 
-        if ($locale && in_array($locale, $locales)) App::setLocale($locale);
-        else App::setLocale($fallbackLocale);
+        if ($locale && in_array($locale, config('app.locales'))) {
+            App::setLocale($locale);
+        }
 
         return $next($request);
     }

@@ -15,7 +15,7 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        if (!in_array(auth()->user()->type, $roles)) {
+        if (!in_array(auth()->user()->role, $roles)) {
             abort(403, 'Unauthorized access.');
         }
 

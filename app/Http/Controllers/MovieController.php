@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Movie\MovieRequest;
 use App\Http\Requests\Movie\MovieUpdateRequest;
+use App\Http\Requests\MovieRequest;
 use App\Models\Movie;
 use App\Services\FileUploadService;
 use Illuminate\Http\Response;

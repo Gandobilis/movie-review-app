@@ -2,19 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RateMovieRequest;
-use App\Http\Requests\User\UserCreateRequest;
-use App\Http\Requests\User\UserUpdateRequest;
+use App\Http\Requests\UserRequest;
 use App\Models\User;
-use App\Services\FileUploadService;
 use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
-    public function __construct(private readonly FileUploadService $fileUploadService)
-    {
-    }
-
     /**
      * Display a listing of the resource.
      */
@@ -30,13 +23,9 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserCreateRequest $request): Response
+    public function store(UserRequest $request): Response
     {
         $data = $request->validated();
-
-        if (isset($data['image'])) {
-            $data['image'] = $this->fileUploadService->uploadFile($data['image'], 'users');
-        }
 
         $user = User::create($data);
 
@@ -59,17 +48,9 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserUpdateRequest $request, User $user): Response
+    public function update(UserRequest $request, User $user): Response
     {
         $data = $request->validated();
-
-        if (isset($data['image'])) {
-            if (isset($user->image)) {
-                $this->fileUploadService->deleteFile($user->image);
-            }
-
-            $data['image'] = $this->fileUploadService->uploadFile($data['image'], 'users');
-        }
 
         $user->update($data);
 
@@ -84,40 +65,10 @@ class UserController extends Controller
      */
     public function destroy(User $user): Response
     {
-        if (isset($user->image)) {
-            $this->fileUploadService->deleteFile($user->image);
-        }
-
         $user->delete();
 
         return response([
             'message' => __('user.success.destroy'),
-        ]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function activate(User $user): Response
-    {
-        $user->update(['active' => true]);
-
-        return response([
-            'message' => __('user.success.activate'),
-            'user' => $user
-        ]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function deactivate(User $user): Response
-    {
-        $user->update(['active' => false]);
-
-        return response([
-            'message' => __('user.success.deactivate'),
-            'user' => $user
         ]);
     }
 }
