@@ -50,11 +50,12 @@ class MovieController extends Controller
     public function show(Movie $movie): Response
     {
         $movie->load('genres:id,title', 'ratings.author:id,name');
+        $movie['rating'] = $movie->ratings->avg('rating');
 
         $similar_movies = [];
 
         foreach ($movie->genres as $genre) {
-            $similarMovies[$genre->title] = $genre->movies()->select('id', 'title')->take(3)->get();
+            $similar_movies[$genre->title] = $genre->movies()->select('id', 'title')->take(3)->get();
         }
 
         return response([

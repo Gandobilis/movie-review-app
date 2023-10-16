@@ -23,7 +23,8 @@ class RatingRequest extends FormRequest
     {
         return [
             'rating' => 'required|integer|min:0|max:5',
-            'description' => 'string',
+            'comment' => 'string',
+            'movie_id' => 'required|exists:movies,id'
         ];
     }
 }
