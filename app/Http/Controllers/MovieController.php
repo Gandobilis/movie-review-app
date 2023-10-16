@@ -36,7 +36,7 @@ class MovieController extends Controller
         $data['image'] = $this->fileUploadService->uploadFile($data['image'], 'movies');
 
         $movie = Movie::create($data);
-        $movie->genres()->attach($data['genre_ids']);
+        $movie->genres()->sync($data['genre_ids']);
 
         return response([
             'message' => __('movie.success.store'),
@@ -54,8 +54,7 @@ class MovieController extends Controller
         $similar_movies = $movie->genres()
             ->whereHas('movies', function ($query) use ($movie) {
                 $query->where('movies.id', '!=', $movie->id);
-            })
-            ->with('movies')
+            })->with('movies')
             ->paginate(config('paginate.default'));
 
         return response([
@@ -67,7 +66,7 @@ class MovieController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(MovieUpdateRequest $request, Movie $movie): Response
+    public function update(MovieRequest $request, Movie $movie): Response
     {
         $data = $request->validated();
 

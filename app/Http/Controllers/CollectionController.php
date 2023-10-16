@@ -13,7 +13,7 @@ class CollectionController extends Controller
      */
     public function index(): Response
     {
-        $collections = Collection::with('author:id,name,image')->paginate(config('paginate.default'));
+        $collections = Collection::with('author:id,name')->paginate(config('paginate.default'));
 
         return response([
             'collections' => $collections
