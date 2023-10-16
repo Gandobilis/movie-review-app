@@ -92,4 +92,18 @@ class MovieController extends Controller
 
         return response(status: 204);
     }
+
+    public function chooseMovie(): Response
+    {
+        $user = auth()->user();
+        $userGenres = $user->genres->pluck('id')->toArray();
+
+        $unseen_movies = Movie::whereDoesntHave('users', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->whereIn('genre_id', $userGenres)->get();
+
+        return response([
+            'unseen_movies' => $unseen_movies
+        ]);
+    }
 }
