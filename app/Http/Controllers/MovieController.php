@@ -98,7 +98,7 @@ class MovieController extends Controller
         $user = auth()->user();
         $userGenres = $user->genres->pluck('id')->toArray();
 
-        $unseen_movies = Movie::whereDoesntHave('users', function ($query) use ($user) {
+        $unseen_movies = Movie::whereDoesntHave('user_movie', function ($query) use ($user) {
             $query->where('user_id', $user->id);
         })->whereIn('genre_id', $userGenres)->get();
 
