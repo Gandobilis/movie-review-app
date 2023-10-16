@@ -23,7 +23,7 @@ class GenreRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255|unique:genres,name',
-            'desc' => 'string'
+            'description' => 'string'
         ];
     }
 }

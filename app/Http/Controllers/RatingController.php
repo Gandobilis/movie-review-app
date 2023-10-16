@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RateRequest;
+use App\Http\Requests\RatingRequest;
 use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -12,7 +12,7 @@ class RatingController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(RateRequest $request): Response
+    public function store(RatingRequest $request): Response
     {
         $data = $request->validated();
         $data['user_id'] = auth()->id();
@@ -28,7 +28,7 @@ class RatingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(RateRequest $request, Rating $rate): Response
+    public function update(RatingRequest $request, Rating $rate): Response
     {
         $data = $request->validated();
 

@@ -70,10 +70,8 @@ class MovieController extends Controller
     {
         $data = $request->validated();
 
-        if (isset($data['image'])) {
-            $data['image'] = $this->fileUploadService->uploadFile($data['image'], 'users');
-            $this->fileUploadService->deleteFile($movie->image);
-        }
+        $data['image'] = $this->fileUploadService->uploadFile($data['image'], 'users');
+        $this->fileUploadService->deleteFile($movie->image);
 
         $movie->update($data);
         $movie->genres()->sync($data['genre_ids']);
@@ -89,8 +87,8 @@ class MovieController extends Controller
      */
     public function destroy(Movie $movie): Response
     {
-        $this->fileUploadService->deleteFile($movie->image);
         $movie->delete();
+        $this->fileUploadService->deleteFile($movie->image);
 
         return response(status: 204);
     }
