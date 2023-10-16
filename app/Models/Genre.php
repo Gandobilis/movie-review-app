@@ -15,6 +15,8 @@ class Genre extends Model
         'description'
     ];
 
+    protected $hidden = ['pivot'];
+
     public function users(): belongsToMany
     {
         return $this->belongsToMany(User::class, 'user_genre');

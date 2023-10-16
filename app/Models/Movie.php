@@ -22,6 +22,8 @@ class Movie extends Model
         'full_image'
     ];
 
+    protected $hidden = ['image', 'created_at', 'updated_at', 'pivot'];
+
     protected function fullImage(): Attribute
     {
         return Attribute::make(

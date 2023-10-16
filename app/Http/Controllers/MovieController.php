@@ -19,7 +19,7 @@ class MovieController extends Controller
      */
     public function index(): Response
     {
-        $movies = Movie::with('genres:id,name')->paginate(config('paginate.default'));
+        $movies = Movie::with('genres:id,title')->paginate(config('paginate.default'));
 
         return response([
             'movies' => $movies
@@ -49,13 +49,13 @@ class MovieController extends Controller
      */
     public function show(Movie $movie): Response
     {
-        $movie->load('genres');
+        $movie->load('genres:id,title', 'ratings.author:id,name');
 
-        $similar_movies = $movie->genres()
-            ->whereHas('movies', function ($query) use ($movie) {
-                $query->where('movies.id', '!=', $movie->id);
-            })->with('movies')
-            ->paginate(config('paginate.default'));
+        $similar_movies = [];
+
+        foreach ($movie->genres as $genre) {
+            $similarMovies[$genre->title] = $genre->movies()->select('id', 'title')->take(3)->get();
+        }
 
         return response([
             'movie' => $movie,
