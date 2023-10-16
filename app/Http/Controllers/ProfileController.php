@@ -12,12 +12,9 @@ class ProfileController extends Controller
      */
     public function show(): Response
     {
-        $user = auth()->user();
-        $user->load('genres');
+        $user = auth()->user()->load('genres');
 
-        return response([
-            'user' => $user
-        ]);
+        return response(['user' => $user]);
     }
 
     /**
@@ -26,17 +23,11 @@ class ProfileController extends Controller
     public function update(ProfileRequest $request): Response
     {
         $data = $request->validated();
-        $genre_ids = $data['genre_ids'];
-        unset($data['genre_ids']);
 
         $user = auth()->user();
         $user->update($data);
-        $user->genres()->sync($genre_ids);
+        $user->genres()->sync($data['genre_ids']);
 
-        $user->load('genres');
-
-        return response([
-            'user' => $user
-        ]);
+        return $this->show();
     }
 }
