@@ -17,9 +17,9 @@ class MovieSeeder extends Seeder
         $movies = Movie::factory()->count(500)->create();
 
         $movies->each(function ($movie) use ($genres) {
-            $randomGenres = $genres->random(rand(1, 4));
+            $_genres = $genres->random(rand(1, 4));
 
-            $movie->genres()->attach($randomGenres);
+            $movie->genres()->attach($_genres);
         });
     }
 }

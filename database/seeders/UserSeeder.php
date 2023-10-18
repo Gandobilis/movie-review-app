@@ -20,15 +20,16 @@ class UserSeeder extends Seeder
             'role' => 'admin'
         ]);
 
-        User::factory()
-            ->count(99)
-            ->create()
-            ->each(function ($user) {
-                $genres = Genre::inRandomOrder()->limit(rand(1, 15))->get();
-                $movies = Movie::inRandomOrder()->limit(rand(1, 500))->get();
+        $users = User::factory()->count(99)->create();
+        $genres = Genre::all()->pluck('id');
+        $movies = Movie::all()->pluck('id');
 
-                $user->genres()->attach($genres);
-                $user->viewedMovies()->attach($movies);
-            });
+        $users->each(function ($user) use ($genres, $movies) {
+            $_genres = $genres->random(1, 15);
+            $_movies = $movies->random(1, 500);
+
+            $user->genres()->attach($_genres);
+            $user->viewedMovies()->attach($_movies);
+        });
     }
 }
