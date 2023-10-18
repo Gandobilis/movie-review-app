@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Movie;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -17,9 +18,7 @@ class UserSeeder extends Seeder
             'email' => 'lashadeveloper@gmail.com',
             'role' => 'admin'
         ]);
-        User::factory()->create([
-            'name' => 'Lasha Gagnidze1',
-            'email' => 'lashadeveloper1@gmail.com',
-        ]);
+        User::factory()->count(12)->create();
+
     }
 }
