@@ -6,6 +6,7 @@ use App\Http\Requests\MovieRequest;
 use App\Models\Movie;
 use App\Models\Rating;
 use App\Services\FileUploadService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Response;
 
@@ -18,14 +19,44 @@ class MovieController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $movies = Movie::with('genres:id,title')->paginate(config('paginate.default'));
+        $query = Movie::with('genres:id,title');
+
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('title', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('description', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        if ($request->has('order_by')) {
+            $orderBy = $request->input('order_by');
+
+            if (in_array('latest', $orderBy)) {
+                $query->orderBy('movies.created_at', 'desc');
+            }
+
+            if (in_array('rating', $orderBy)) {
+                $query->leftJoin('ratings', 'movies.id', '=', 'ratings.movie_id')
+                    ->groupBy('movies.id')
+                    ->select('movies.*')
+                    ->selectRaw('ROUND(AVG(COALESCE(ratings.rating, 0)), 1) as avg_rating')
+                    ->orderBy('avg_rating', 'desc');
+            }
+        }
+
+        $page = $request->input('page', 1);
+        $perPage = $request->input('per_page', config('paginate.default'));
+
+        $movies = $query->paginate(perPage: $perPage, page: $page);
 
         return response([
             'movies' => $movies
         ]);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -124,6 +155,7 @@ class MovieController extends Controller
         return Movie::whereHas('genres', function ($query) use ($genre_ids, $movie_ids) {
             $query->whereIn('id', $genre_ids);
         })->whereNotIn('id', $movie_ids)
+            ->with('genres:id,title')
             ->inRandomOrder()
             ->take(10)
             ->get();
