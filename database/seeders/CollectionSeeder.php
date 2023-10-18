@@ -14,15 +14,16 @@ class CollectionSeeder extends Seeder
      */
     public function run(): void
     {
-        Collection::factory()
-            ->count(99)
-            ->create()
-            ->each(function ($collection) {
-                $users = User::inRandomOrder()->limit(rand(1, 99))->get();
-                $movies = Movie::inRandomOrder()->limit(rand(1, 500))->get();
+        $users = User::all()->pluck('id');
+        $movies = Movie::all()->pluck('id');
+        $collections = Collection::factory()->count(99)->create();
 
-                $collection->likes()->attach($users);
-                $collection->movies()->attach($movies);
-            });
+        $collections->each(function ($collection) use ($users, $movies) {
+            $_users = $users->random(1, 99);
+            $_movies = $movies->random(1, 500);
+
+            $collection->likes()->attach($_users);
+            $collection->movies()->attach($_movies);
+        });
     }
 }
