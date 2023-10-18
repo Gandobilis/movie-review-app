@@ -42,7 +42,7 @@ class CollectionController extends Controller
      */
     public function show(Collection $collection): Response
     {
-        $collection->load('author', 'movies');
+        $collection->load('author:id,name', 'movies');
 
         return response([
             'collection' => $collection
