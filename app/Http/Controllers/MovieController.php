@@ -52,11 +52,11 @@ class MovieController extends Controller
     {
         $user = auth()->user();
         $movie->load('genres:id,title');
-        $ratings = Rating::where('movie_id', $movie->id)->where('rating', '!=', null)->get();
+        $ratings = Rating::with('author:id,name')->where('movie_id', $movie->id)->where('rating', '!=', null)->get();
 
-        $movie['avg_rating'] = $ratings->avg('rating');
+        $movie['avg_rating'] = number_format($ratings->avg('rating'), 1);
 
-        $similar_movies = $this->getMovies($movie->genres->pluck('id'), $user->viewedMovies->pluck('id'));
+        $similar_movies = $this->getMovies($movie->genres->pluck('id'), $user?->viewedMovies->pluck('id'));
 
         return response([
             'movie' => $movie,
@@ -115,8 +115,12 @@ class MovieController extends Controller
         ]);
     }
 
-    private function getMovies(Collection $genre_ids, Collection $movie_ids)
+    private function getMovies(Collection $genre_ids, Collection|null $movie_ids)
     {
+        if ($movie_ids === null) {
+            $movie_ids = collect();
+        }
+
         return Movie::whereHas('genres', function ($query) use ($genre_ids, $movie_ids) {
             $query->whereIn('id', $genre_ids);
         })->whereNotIn('id', $movie_ids)
