@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Rating;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class RatingSeeder extends Seeder
@@ -13,6 +12,6 @@ class RatingSeeder extends Seeder
      */
     public function run(): void
     {
-        Rating::factory()->count(256)->create();
+        Rating::factory()->count(7500)->create();
     }
 }

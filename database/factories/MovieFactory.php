@@ -17,7 +17,7 @@ class MovieFactory extends Factory
     public function definition(): array
     {
         return [
-            'image' => 'path/to/your/movie/image.jpg',
+            'image' => 'movies/5PAhfM4nyBGL003zweb-final.png',
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph
         ];

@@ -18,10 +18,13 @@ class RatingFactory extends Factory
      */
     public function definition(): array
     {
+        $user = User::inRandomOrder()->first();
+        $movie = Movie::inRandomOrder()->first();
+
         return [
             'rating' => $this->faker->numberBetween(1, 5),
-            'user_id' => User::inRandomOrder()->first(),
-            'movie_id' => Movie::inRandomOrder()->first(),
+            'user_id' => $user->id,
+            'movie_id' => $movie->id,
             'comment' => $this->faker->sentence,
         ];
     }

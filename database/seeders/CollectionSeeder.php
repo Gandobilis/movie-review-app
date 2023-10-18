@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Collection;
 use App\Models\Movie;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class CollectionSeeder extends Seeder
@@ -16,11 +15,12 @@ class CollectionSeeder extends Seeder
     public function run(): void
     {
         Collection::factory()
-            ->count(65)
+            ->count(99)
             ->create()
             ->each(function ($collection) {
-                $users = User::inRandomOrder()->limit(rand(1, 13))->get();
-                $movies = Movie::inRandomOrder()->limit(rand(1, 10))->get();
+                $users = User::inRandomOrder()->limit(rand(1, 99))->get();
+                $movies = Movie::inRandomOrder()->limit(rand(1, 500))->get();
+
                 $collection->likes()->attach($users);
                 $collection->movies()->attach($movies);
             });

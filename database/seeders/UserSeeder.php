@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Collection;
 use App\Models\Genre;
 use App\Models\Movie;
 use App\Models\User;
@@ -20,15 +19,16 @@ class UserSeeder extends Seeder
             'email' => 'lashadeveloper@gmail.com',
             'role' => 'admin'
         ]);
-        User::factory()->count(12)->create();
 
-        User::all()->each(function ($user) {
-            $genres = Genre::inRandomOrder()->limit(rand(1, 13))->get();
-            $movies = Movie::inRandomOrder()->limit(rand(1, 33))->get();
+        User::factory()
+            ->count(99)
+            ->create()
+            ->each(function ($user) {
+                $genres = Genre::inRandomOrder()->limit(rand(1, 15))->get();
+                $movies = Movie::inRandomOrder()->limit(rand(1, 500))->get();
 
-            $user->genres()->attach($genres);
-            $user->viewedMovies()->attach($movies);
-        });
-
+                $user->genres()->attach($genres);
+                $user->viewedMovies()->attach($movies);
+            });
     }
 }
