@@ -8,9 +8,12 @@ return new class extends Migration {
     /**
      * Run the migrations.
      */
+
+    protected $connection = 'mysql2';
+
     public function up(): void
     {
-        Schema::connection('mysql2')->create('subscribers', function (Blueprint $table) {
+        Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
             $table->string('email');
             $table->timestamps();
@@ -22,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::connection('mysql2')->dropIfExists('subscribers');
+        Schema::dropIfExists('subscriptions');
     }
 };
