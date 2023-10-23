@@ -6,6 +6,7 @@ use App\Http\Controllers\GenreController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RatingController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,11 @@ Route::middleware('locale')->group(function () {
     Route::apiResource('movies', MovieController::class)
         ->only('index', 'show')
         ->names('movies');
+
+    Route::post('subscription/subscribe', [SubscriptionController::class, 'subscribe'])
+        ->name('subscribe');
+    Route::put('subscription/unsubscribe/{subscription:email}', [SubscriptionController::class, 'unsubscribe'])
+        ->name('unsubscribe');
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', [AuthController::class, 'logout'])
