@@ -20,7 +20,7 @@ class SubscriptionController extends Controller
         );
 
         return response([
-            'message' => __('subscription.subscribe'),
+            'message' => __('subscription.success.subscribe'),
             'subscription' => $subscription
         ], 201);
     }
@@ -33,7 +33,7 @@ class SubscriptionController extends Controller
         $subscription->delete();
 
         return response([
-            'message' => __('subscription.unsubscribe'),
+            'message' => __('subscription.success.unsubscribe'),
         ]);
     }
 }

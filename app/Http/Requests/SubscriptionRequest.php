@@ -22,7 +22,7 @@ class SubscriptionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email'],
+            'email' => 'required|email|unique:mysql2.subscriptions,email',
         ];
     }
 }
