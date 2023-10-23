@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Repositories\CollectionRepository;
 use App\Repositories\GenreRepository;
+use App\Repositories\Interfaces\CollectionRepositoryInterface;
 use App\Repositories\Interfaces\GenreRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\UserRepository;
@@ -17,6 +19,7 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         $this->app->bind(GenreRepositoryInterface::class, GenreRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(CollectionRepositoryInterface::class, CollectionRepository::class);
     }
 
     /**

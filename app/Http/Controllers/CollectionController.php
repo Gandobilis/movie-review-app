@@ -4,16 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CollectionRequest;
 use App\Models\Collection;
+use App\Repositories\Interfaces\CollectionRepositoryInterface;
 use Illuminate\Http\Response;
 
 class CollectionController extends Controller
 {
+    public function __construct(private CollectionRepositoryInterface $collectionRepository)
+    {
+
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index(): Response
     {
-        $collections = Collection::with('author:id,name')->paginate(config('paginate.default'));
+        $collections = $this->collectionRepository->getCollections();
 
         return response([
             'collections' => $collections
@@ -29,8 +35,7 @@ class CollectionController extends Controller
 
         $data['user_id'] = auth()->id();
 
-        $collection = Collection::create($data);
-        $collection->movies()->attach($data['movie_ids']);
+        $collection = $this->collectionRepository->storeCollection($data);
 
         return response([
             'collection' => $collection
@@ -42,7 +47,7 @@ class CollectionController extends Controller
      */
     public function show(Collection $collection): Response
     {
-        $collection->load('author:id,name', 'movies');
+        $this->collectionRepository->showCollection($collection);
 
         return response([
             'collection' => $collection
@@ -56,8 +61,7 @@ class CollectionController extends Controller
     {
         $data = $request->validated();
 
-        $collection->update($data);
-        $collection->movies()->sync($data['movie_ids']);
+        $this->collectionRepository->updateCollection($collection, $data);
 
         return response([
             'collection' => $collection
@@ -69,14 +73,14 @@ class CollectionController extends Controller
      */
     public function destroy(Collection $collection): Response
     {
-        $collection->delete();
+        $this->collectionRepository->destroyCollection($collection);
 
         return response(status: 204);
     }
 
     public function likedCollections(): Response
     {
-        $liked_collections = auth()->user()->likedCollections;
+        $liked_collections = $this->collectionRepository->likedCollections();
 
         return response([
             'liked_collections' => $liked_collections
@@ -85,7 +89,7 @@ class CollectionController extends Controller
 
     public function toggleCollectionLike(Collection $collection): Response
     {
-        auth()->user()->likedCollections()->toggle($collection->id);
+        $this->collectionRepository->toggleCollectionLike($collection);
 
         return response([
             'message' => 'like status toggled.'
