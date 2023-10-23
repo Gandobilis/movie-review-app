@@ -4,16 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\GenreRequest;
 use App\Models\Genre;
+use App\Repositories\Interfaces\GenreRepositoryInterface;
 use Illuminate\Http\Response;
 
 class GenreController extends Controller
 {
+    public function __construct(private GenreRepositoryInterface $genreRepository)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index(): Response
     {
-        $genres = Genre::all();
+        $genres = $this->genreRepository->getGenres();
 
         return response([
             'genres' => $genres
@@ -27,7 +32,7 @@ class GenreController extends Controller
     {
         $data = $request->validated();
 
-        $genre = Genre::create($data);
+        $genre = $this->genreRepository->storeGenre($data);
 
         return response([
             'genre' => $genre
@@ -39,7 +44,7 @@ class GenreController extends Controller
      */
     public function show(Genre $genre): Response
     {
-        $genre->load('movies');
+        $this->genreRepository->showGenre($genre);
 
         return response([
             'genre' => $genre
@@ -53,7 +58,7 @@ class GenreController extends Controller
     {
         $data = $request->validated();
 
-        $genre->update($data);
+        $this->genreRepository->updateGenre($genre, $data);
 
         return response([
             'genre' => $genre
@@ -65,7 +70,7 @@ class GenreController extends Controller
      */
     public function destroy(Genre $genre): Response
     {
-        $genre->delete();
+        $this->genreRepository->destroyGenre($genre);
 
         return response(status: 204);
     }

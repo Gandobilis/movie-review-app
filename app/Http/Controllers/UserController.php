@@ -4,16 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\Models\User;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
+    public function __construct(private UserRepositoryInterface $userRepository)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index(): Response
     {
-        $users = User::paginate(config('paginate.default'));
+        $users = $this->userRepository->getUsers();
 
         return response([
             'users' => $users
@@ -27,7 +32,7 @@ class UserController extends Controller
     {
         $data = $request->validated();
 
-        $user = User::create($data);
+        $user = $this->userRepository->showUser($data);
 
         return response([
             'message' => __('user.success.store'),
@@ -52,7 +57,7 @@ class UserController extends Controller
     {
         $data = $request->validated();
 
-        $user->update($data);
+        $this->userRepository->updateUser($user, $data);
 
         return response([
             'message' => __('user.success.update'),
@@ -65,7 +70,7 @@ class UserController extends Controller
      */
     public function destroy(User $user): Response
     {
-        $user->delete();
+        $this->userRepository->destroyUser($user);
 
         return response([
             'message' => __('user.success.destroy'),
