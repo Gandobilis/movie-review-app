@@ -66,6 +66,9 @@ Route::middleware('locale')->group(function () {
             ->only('index', 'show')
             ->names('auth.genres');
 
+        Route::apiResource('movies', MovieController::class)
+            ->names('admin.movies');
+
         Route::middleware('role:admin')->prefix('admin')->group(function () {
             Route::apiResource('users', UserController::class)
                 ->names('admin.users');
@@ -73,9 +76,6 @@ Route::middleware('locale')->group(function () {
             Route::apiResource('genres', GenreController::class)
                 ->only('store', 'update', 'destroy')
                 ->names('admin.genres');
-
-            Route::apiResource('movies', MovieController::class)
-                ->names('admin.movies');
         });
     });
 });

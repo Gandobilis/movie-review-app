@@ -64,6 +64,7 @@ class MovieController extends Controller
     public function store(MovieRequest $request): Response
     {
         $data = $request->validated();
+        $this->authorize(Movie::class, 'create');
 
         $data['image'] = $this->fileUploadService->uploadFile($data['image'], 'movies');
 
@@ -102,6 +103,7 @@ class MovieController extends Controller
     public function update(MovieRequest $request, Movie $movie): Response
     {
         $data = $request->validated();
+        $this->authorize(Movie::class, 'update');
 
         $data['image'] = $this->fileUploadService->uploadFile($data['image'], 'users');
         $this->fileUploadService->deleteFile($movie->image);
