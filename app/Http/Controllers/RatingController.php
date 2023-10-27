@@ -4,23 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RatingRequest;
 use App\Models\Rating;
+use App\Repositories\Interfaces\RatingRepositoryInterface;
 use Illuminate\Http\Response;
 
 class RatingController extends Controller
 {
+    public function __construct(private readonly RatingRepositoryInterface $ratingRepository)
+    {
+    }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(RatingRequest $request): Response
     {
-        $data = $request->validated();
-        $data['user_id'] = auth()->id();
-
-        $rating = Rating::create($data);
-
         return response([
             'message' => 'Rating added successfully',
-            'rating' => $rating
+            'rating' => $this->ratingRepository->storeRating($request->validated())
         ], 201);
     }
 
@@ -29,9 +29,7 @@ class RatingController extends Controller
      */
     public function update(RatingRequest $request, Rating $rating): Response
     {
-        $data = $request->validated();
-
-        $rating->update($data);
+        $this->ratingRepository->updateRating($rating, $request->validated());
 
         return response([
             'message' => 'Rating updated successfully',
@@ -44,7 +42,7 @@ class RatingController extends Controller
      */
     public function destroy(Rating $rating): Response
     {
-        $rating->delete();
+        $this->ratingRepository->destroyRating($rating);
 
         return response(status: 204);
     }
