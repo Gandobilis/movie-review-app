@@ -3,18 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileRequest;
+use App\Repositories\Interfaces\ProfileRepositoryInterface;
 use Illuminate\Http\Response;
 
 class ProfileController extends Controller
 {
+    public function __construct(private readonly ProfileRepositoryInterface $profileRepository)
+    {
+    }
+
     /**
      * Display the specified resource.
      */
     public function show(): Response
     {
-        $user = auth()->user()->load('genres');
-
-        return response(['user' => $user]);
+        return response([
+            'user' => $this->profileRepository->showProfile()
+        ]);
     }
 
     /**
@@ -22,11 +27,7 @@ class ProfileController extends Controller
      */
     public function update(ProfileRequest $request): Response
     {
-        $data = $request->validated();
-
-        $user = auth()->user();
-        $user->update($data);
-        $user->genres()->sync($data['genre_ids']);
+        $this->profileRepository->updateProfile($request->validated());
 
         return $this->show();
     }
