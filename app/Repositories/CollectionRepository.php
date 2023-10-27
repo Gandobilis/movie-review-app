@@ -14,6 +14,7 @@ class CollectionRepository implements CollectionRepositoryInterface
 
     public function storeCollection($data): Collection
     {
+        $data['user_id'] = auth()->id();
         $collection = Collection::create($data);
         $collection->movies()->attach($data['movie_ids']);
 

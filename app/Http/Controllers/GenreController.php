@@ -9,7 +9,7 @@ use Illuminate\Http\Response;
 
 class GenreController extends Controller
 {
-    public function __construct(private GenreRepositoryInterface $genreRepository)
+    public function __construct(private readonly GenreRepositoryInterface $genreRepository)
     {
     }
 

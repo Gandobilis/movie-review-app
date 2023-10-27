@@ -9,7 +9,7 @@ use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
-    public function __construct(private UserRepositoryInterface $userRepository)
+    public function __construct(private readonly UserRepositoryInterface $userRepository)
     {
     }
 

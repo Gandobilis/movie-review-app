@@ -9,9 +9,8 @@ use Illuminate\Http\Response;
 
 class CollectionController extends Controller
 {
-    public function __construct(private CollectionRepositoryInterface $collectionRepository)
+    public function __construct(private readonly CollectionRepositoryInterface $collectionRepository)
     {
-
     }
 
     /**
@@ -31,14 +30,9 @@ class CollectionController extends Controller
      */
     public function store(CollectionRequest $request): Response
     {
-        $data = $request->validated();
-
-        $data['user_id'] = auth()->id();
-
-        $collection = $this->collectionRepository->storeCollection($data);
-
         return response([
-            'collection' => $collection
+            'collection' => $this->collectionRepository
+                ->storeCollection($request->validated())
         ], 201);
     }
 
