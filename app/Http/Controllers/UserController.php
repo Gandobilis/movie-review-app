@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Mail\TestMail;
 use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -32,7 +34,9 @@ class UserController extends Controller
     {
         $data = $request->validated();
 
-        $user = $this->userRepository->showUser($data);
+        $user = $this->userRepository->storeUser($data);
+
+        Mail::to($user->email)->send(new TestMail($user));
 
         return response([
             'message' => __('user.success.store'),
